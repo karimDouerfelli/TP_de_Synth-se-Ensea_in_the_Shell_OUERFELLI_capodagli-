@@ -1,45 +1,45 @@
 #								#
-#Configuration de la compilation#
+#Compilation configuration #
 #								#
 
-# Nom du programme final (l'exécutable qui sera créé)
+# Name of the programme(our shell )
 TARGET = enseash
 
-# Choix du compilateur (GCC est le standard sous Linux)
+# Choice of the compilateur (GCC because we have the Linux)
 CC = gcc
 
-# Options de compilation (Flags) :
-# -Wall -Wextra : Active tous les avertissements. Indispensable pour avoir un code "propre" (Clean Code)
-# -g            : Ajoute les infos de débogage (utile pour gdb ou valgrind)
-# -ICore/Inc    : Indique au compilateur de chercher les fichiers .h dans le dossier Core/Inc
-#                 Cela permet de faire #include "enseash.h" proprement.
+# Compilation options (Flags):
+# -Wall -Wextra: Enables all warnings. Essential for having "clean" code.
+# -g: Adds debugging information (useful for gdb or valgrind)
+# -ICore/Inc: Tells the compiler to look for .h files in the Core/Inc folder
+# This allows you to do #include "enseash.h" properly.
 CFLAGS = -Wall -Wextra -g -ICore/Inc
-# Dossiers
+# Files
 SRC_DIR = Core/Src
 OBJ_DIR = Obj
 
-# Liste des fichiers sources (trouve tous les .c dans Core/Src)
+# List of source files (finds all .c files in Core/Src)
 SRCS = $(wildcard $(SRC_DIR)/*.c)
-# Transforme les .c en .o (dans le dossier Obj pour rester propre)
+# Transforme  .c in  .o (in the Obj folder pour rester propre)
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
-# Règle par défaut
+# default
 all: $(TARGET)
 
-# Link de l'exécutable
+# Link of our shell 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 	@echo "Compilation réussie ! Lancez ./$(TARGET)"
 
-# Compilation des fichiers objets
+# Compilation of the object file 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Création du dossier Obj s'il n'existe pas
+# creation of the folder if it don't exist 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-# Nettoyage
+# cleaning 
 clean:
 	rm -rf $(OBJ_DIR) $(TARGET)
 
