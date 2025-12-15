@@ -18,13 +18,17 @@ int main(void) {
         //Q2 command read  ( the R from the boucle )
         bytes_read = read(STDIN_FILENO, buffer, BUF_SIZE -1); // we use read with the standard input (STDIN_FILENO)
         //gestion de <crtl>+D or lecture error
-        if(bytes_read < 0){
+        if(bytes_read <= 0){
             break;
         }
         if(strlen(buffer)==0){
             continue;
         }
         buffer[bytes_read - 1]= '\0'; // replace the end with \0
+        // Q3 
+        if(strcmp(buffer,"exit")==0){
+            break;
+        }
         execute_command(buffer); // we execute the command 
         
     }
