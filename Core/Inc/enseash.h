@@ -1,9 +1,5 @@
-
-
 #ifndef ENSEASH_H
 #define ENSEASH_H
-
-// dependencies
 
 #include <unistd.h>
 #include <string.h>
@@ -16,7 +12,7 @@
 #define PROMPT "enseash % "
 
 // Declarations
-void display_prompt();
-void read_command(char *buf);
+// On utilise une seule fonction générique pour afficher (Prompt ou Message)
+void display_message(const char *str); 
 
 #endif

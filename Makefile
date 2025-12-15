@@ -1,11 +1,19 @@
-# Nom de l'exécutable final
+#								#
+#Configuration de la compilation#
+#								#
+
+# Nom du programme final (l'exécutable qui sera créé)
 TARGET = enseash
 
-# Compilateur et options (flags)
+# Choix du compilateur (GCC est le standard sous Linux)
 CC = gcc
-# -I permet d'inclure les headers dans Core/Inc sans mettre le chemin complet dans le .c
-CFLAGS = -Wall -Wextra -g -ICore/Inc
 
+# Options de compilation (Flags) :
+# -Wall -Wextra : Active tous les avertissements. Indispensable pour avoir un code "propre" (Clean Code)
+# -g            : Ajoute les infos de débogage (utile pour gdb ou valgrind)
+# -ICore/Inc    : Indique au compilateur de chercher les fichiers .h dans le dossier Core/Inc
+#                 Cela permet de faire #include "enseash.h" proprement.
+CFLAGS = -Wall -Wextra -g -ICore/Inc
 # Dossiers
 SRC_DIR = Core/Src
 OBJ_DIR = Obj
