@@ -6,13 +6,17 @@ Author : Capodagli Janus, Ouerfelli Karim
 #include "enseash.h"
 
 int main(void) {
+    char buffer[BUF_SIZE];
     // Q1: Welcome message 
     display_message(WELCOME_MSG);
 
-    // Q1: Simple Prompt (Juste l'affichage pour l'instant)
+    // Q1: Simple Prompt
     display_message(PROMPT);
+    // Q2 
+    while(1){
+       int status = execute_command(buffer);
+        
+    }
 
-    // Pour l'instant on quitte direct car on n'a pas encore la boucle (Q2)
-    // Cela permet de tester si l'affichage fonctionne.
     return EXIT_SUCCESS;
 }
