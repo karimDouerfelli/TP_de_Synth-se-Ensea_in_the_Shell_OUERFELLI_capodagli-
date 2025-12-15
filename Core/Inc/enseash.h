@@ -5,17 +5,17 @@
 
 #include <unistd.h>
 #include <string.h>
-#include <stdio.h>
+#include <stdio.h> //  for perror
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <time.h> 
-#include <fcntl.h> // Required for Q7
+#include <fcntl.h> //  for open()
 
-// --- COLORS ---
+// Colors 
 #define RED "\033[0;31m" 
 #define GRN "\033[0;32m"
 #define L_CYAN "\033[1;36m"
-#define NC  "\033[0m" // No Color (Reset)
+#define NC  "\033[0m" // No Color ->white
 
 // Defines
 #define BUF_SIZE 1024
@@ -24,9 +24,11 @@
 #define WELCOME_MSG "Welcome to " RED "ENSEA Shell" NC ".\nType 'exit' to quit.\n"
 #define PROMPT L_CYAN "enseash % " NC
 
-// Prototypes
+// Function defnitions
 void display_message(const char *str);
-void display_int(long value); // Displays an integer using write
-int execute_command(char *command); 
+void display_int(long value);
+int execute_simple_command(char *command); 
+int execute_command(char *command);
+
 
 #endif
