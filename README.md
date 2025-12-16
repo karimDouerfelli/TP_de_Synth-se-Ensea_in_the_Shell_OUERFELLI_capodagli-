@@ -55,9 +55,9 @@ The project follows a clean separation of concerns:
 .
 ├── Core
 │   ├── Inc
-│   │   └── enseash.h      \# Constants, Prototypes, Macros
+│   │   └── enseaShell.h      \# Constants, Prototypes, Macros
 │   └── Src
-│       ├── enseash.c      \# Core logic (Parsing, Fork, Exec, Pipe, Redirections)
+│       ├── enseaShell.c      \# Core logic (Parsing, Fork, Exec, Pipe, Redirections)
 │       └── main.c         \# Main loop (UI, Timing, Signal handling)
 ├── Makefile               \# Build script
 ├── README.md              \# Project documentation
@@ -86,7 +86,7 @@ make
 Start the shell:
 
 ```bash
-./enseash
+./enseaShell
 ```
 
 ### Examples

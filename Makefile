@@ -1,9 +1,7 @@
-#								#
-#Configuration de la compilation#
-#								#
+########Configuration de la compilation#######
 
 # Nom du programme final (l'exécutable qui sera créé)
-TARGET = enseash
+TARGET = enseaShell
 
 # Choix du compilateur (GCC est le standard sous Linux)
 CC = gcc

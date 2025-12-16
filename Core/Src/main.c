@@ -4,7 +4,7 @@ Author : Capodagli Janus, Ouerfelli Karim
 We tried to make it as short as possible
 */
 
-#include "enseash.h"
+#include "enseaShell.h"
 
 int main(void) {
     char input_buf[BUF_SIZE];
@@ -19,12 +19,19 @@ int main(void) {
     write_out(MSG_WELCOME);
     write_out(PROMPT_TEXT); // First prompt is always simple
 
+    // Stack struct for navigating commands
+    cmd_stack *history_head = NULL; 
+    cmd_stack *history_tail = NULL;
+
     while (1) { //infinite loop
         // 1. Wait for user input
         read_count = read(FD_STDIN, input_buf, BUF_SIZE - 1);
 
         // Handle (Ctrl+D) or Read Error
-        if (read_count <= 0){break;}
+        if (read_count <= 0){
+            write_out(CLR_RED "\nForced to quit shell\n"CLR_RESET);
+            break;
+        }
 
         input_buf[read_count - 1] = '\0'; // Replace '\n' with null terminator
 
@@ -35,11 +42,40 @@ int main(void) {
             continue; 
         }
         
-        if (strcmp(input_buf, "exit") == 0) { //user entered "exit" so we quit the shell
+        if (strcmp(input_buf, "exit") == CMP_EQUAL) { //user entered "exit" so we quit the shell
             write_out(MSG_BYE); //Bye bye to the user
             break;
         }
 
+        //  HISTORY MANAGEMENT
+        // Add current command to the linked list
+        cmd_stack *new_node = create_node(input_buf);
+
+        if (history_head == NULL) {
+            history_head = new_node;
+            history_tail = new_node;
+        } else {
+            history_tail->next_cmd = new_node;
+            new_node->previous_cmd = history_tail;
+            history_tail = new_node;
+        }
+
+        // Check if user wants to see history
+        if (strcmp(input_buf, "history") == CMP_EQUAL) {
+            cmd_stack *curr = history_head;
+            int id = 1;
+            write_out(CLR_PRP);
+            while (curr != NULL) {
+                display_int(id++);
+                write_out(": ");
+                write_out(curr->curr_cmd);
+                write_out("\n");
+                curr = curr->next_cmd;
+            }
+            write_out(CLR_RESET);
+            show_prompt(STATUS_SUCCESS, 0); 
+            continue; 
+        }
         // 3. Execution & Timing
         clock_gettime(CLOCK_MONOTONIC, &t_start);
         
