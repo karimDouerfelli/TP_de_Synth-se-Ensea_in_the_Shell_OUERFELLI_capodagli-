@@ -17,8 +17,8 @@
 #define CLR_RED     "\033[0;31m" //red color
 #define CLR_GRN     "\033[0;32m" //green color
 #define CLR_YLW     "\033[1;33m"  //yellow color
-#define CLR_CYAN    "\033[0;35m" //Cyan
-#define CLR_PRP   "\033[0m"  //purple
+#define CLR_CYAN    "\033[0;36m" //Cyan
+#define CLR_PRP   "\033[0;35m"  //purple
 #define CLR_RESET   "\033[0m"  //reset color (white)
 
 // CONSTANTS 

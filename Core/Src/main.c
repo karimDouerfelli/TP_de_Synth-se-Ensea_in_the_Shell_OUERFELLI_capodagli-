@@ -64,8 +64,8 @@ int main(void) {
         if (strcmp(input_buf, "history") == CMP_EQUAL) {
             cmd_stack *curr = history_head;
             int id = 1;
-            write_out(CLR_PRP);
             while (curr != NULL) {
+                write_out(CLR_PRP);
                 display_int(id++);
                 write_out(": ");
                 write_out(curr->curr_cmd);
