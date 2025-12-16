@@ -4,7 +4,7 @@ Author : Capodagli Janus, Ouerfelli Karim
 */
 
 #include "enseash.h"
-#include "time.h"
+#include <time.h>
 
 int main(void) {
     char buffer[BUF_SIZE];
@@ -39,30 +39,36 @@ int main(void) {
         if(strcmp(buffer,"exit")==0){
             break;
         }
+        //the start of the chronometre  Q5
+        clock_gettime(CLOCK_MONOTONIC, &start);
         //we should save the status
         status=execute_command(buffer); // we execute the command 
-                //Q4 
+        //the end of the chronometre  Q5
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        //calcul the time 
+        elapsed_ms=(end.tv_sec - start.tv_sec)*1000 + (end.tv_nsec - start.tv_nsec)/1000000;
+        //Q4 
+        display_message("enseash[");
+
         //after : we use the previous state
         if(WIFEXITED(status)){// if the program finish (exit)
         //WEXITSTATUS use the retour code 
-           display_message("enseash[exit:");
+           display_message("exit:");
            write_integer(WEXITSTATUS(status));
-           display_message("] %");
            
            
 
         }else if (WIFSIGNALED(status))
         {//if the program was murdred 
         // WTERMSIG save the signal number
-        display_message("enseash[sign:");
+        display_message("sign:");
         write_integer(WTERMSIG(status));
-        display_message("] %");
     
         }
-
-        
-
-        
+    //the time 
+    display_message("|");
+    write_integer((int)elapsed_ms);
+    display_message("ms] %");   
     }
 
     display_message("Bye bye ... \n");
