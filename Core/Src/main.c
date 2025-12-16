@@ -4,13 +4,16 @@ Author : Capodagli Janus, Ouerfelli Karim
 */
 
 #include "enseash.h"
+#include "time.h"
 
 int main(void) {
     char buffer[BUF_SIZE];
     ssize_t bytes_read; // the number of octet readed 
     char prompt_msg[BUF_SIZE]; // new buffer for dynamic Q4
     int status =0; // retour command
-    int first_loop = 1 ;// indication
+    struct timespec start, end; // struct to stock the time 
+    long long elapsed_ms; // time en millisecondes 
+
 
     // Q1: Welcome message 
     display_message(WELCOME_MSG);
@@ -42,17 +45,19 @@ int main(void) {
         //after : we use the previous state
         if(WIFEXITED(status)){// if the program finish (exit)
         //WEXITSTATUS use the retour code 
-           if(write(prompt_msg,"enseash[exit:%d]%%",WEXITSTATUS(status))== -1){
-            exit(EXIT_FAILURE);
-           }
+           display_message("enseash[exit:");
+           write_integer(WEXITSTATUS(status));
+           display_message("] %");
+           
+           
 
         }else if (WIFSIGNALED(status))
         {//if the program was murdred 
         // WTERMSIG save the signal number
-        if(write(prompt_msg,"enseash[sign:%d]%%",WTERMSIG(status))== -1){
-            exit(EXIT_FAILURE);
-        }
-            
+        display_message("enseash[sign:");
+        write_integer(WTERMSIG(status));
+        display_message("] %");
+    
         }
 
         
