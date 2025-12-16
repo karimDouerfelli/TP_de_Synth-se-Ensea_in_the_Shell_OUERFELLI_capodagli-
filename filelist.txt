@@ -1,0 +1,8 @@
+Core
+enseash
+EnseaSH.pdf
+filelist.txt
+image.png
+Makefile
+Obj
+README.md

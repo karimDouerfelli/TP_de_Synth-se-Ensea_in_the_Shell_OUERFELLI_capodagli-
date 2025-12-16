@@ -1,88 +1,59 @@
 /*
 File : main.c
 Author : Capodagli Janus, Ouerfelli Karim 
-Description : Main loop of the shell (Strictly NO PRINTF)
+We tried to make it as short as possible
 */
 
 #include "enseash.h"
 
 int main(void) {
-    char buffer[BUF_SIZE];
-    ssize_t ret;
+    char input_buf[BUF_SIZE];
+    ssize_t read_count;
     int status = 0;
     
-    struct timespec start, end;
-    long elapsed_ms = 0;
-    int first_command = 1; 
+    // Timing structures
+    struct timespec t_start, t_end;
+    long duration_ms = 0;
 
-    display_message(WELCOME_MSG);
+    // Show welcome message once
+    write_out(MSG_WELCOME);
+    write_out(PROMPT_TEXT); // First prompt is always simple
 
-    while (1) {
-        // --- 1. PROMPT DISPLAY (Piece by piece construction) ---
-        if (first_command) {
-            display_message(PROMPT); // Simple prompt for start : Light Cyan)
-            first_command = 0;
-        } else {
-            // Start of standard prompt
-            display_message(L_CYAN);
-            display_message("enseash [");
+    while (1) { //infinite loop
+        // 1. Wait for user input
+        read_count = read(FD_STDIN, input_buf, BUF_SIZE - 1);
 
-            if (WIFEXITED(status)) {
-                int exit_code = WEXITSTATUS(status);
-                if (exit_code == 0) {
-                    // SUCCESS: "exit:0"  | "time" (GREEN)
-                    display_message(GRN);
-                    display_message("exit:0|");
-                    display_int(elapsed_ms);
-                    display_message("ms");
-                } else {
-                    // ERROR: "exit:code" | "time" (RED) 
-                    display_message(RED "exit:");
-                    display_int((long)exit_code);
-                    display_message("|");
-                    display_int(elapsed_ms);
-                    display_message("ms");
-                    display_message(NC);
-                }
-            } else if (WIFSIGNALED(status)) {
-                // SIGNAL: "sign:code" (RED)
-                display_message(RED "sign:");
-                display_int((long)WTERMSIG(status));
-                display_message( "|");
-                display_int(elapsed_ms);
-                display_message("ms");
-            }
-            
-            // End of prompt
-            display_message(L_CYAN"] % "NC);
-        }
+        // Handle (Ctrl+D) or Read Error
+        if (read_count <= 0){break;}
 
-        // --- 2. READ INPUT ---
-        ret = read(STDIN_FILENO, buffer, BUF_SIZE - 1);
+        input_buf[read_count - 1] = '\0'; // Replace '\n' with null terminator
 
-        if (ret <= 0) break; // EOF (Ctrl+D)
-
-        buffer[ret - 1] = '\0'; // Remove newline \n
-
-        // Handle empty input
-        if (strlen(buffer) == 0) {
-            first_command = 1; // Return to simple prompt
+        // 2. Handle specific cases
+        if (strlen(input_buf) == 0) { //length=0 means user pressed 'enter'
+            //  Show simple prompt again
+            write_out(PROMPT_TEXT); 
             continue; 
         }
         
-        // Handle "exit" command
-        if (strcmp(buffer, "exit") == 0) {
-            display_message(RED "Bye bye...\n" NC);
+        if (strcmp(input_buf, "exit") == 0) { //user entered "exit" so we quit the shell
+            write_out(MSG_BYE); //Bye bye to the user
             break;
         }
 
-        // --- 3. EXECUTION ---
-        clock_gettime(CLOCK_MONOTONIC, &start);
-        status = execute_command(buffer);
-        clock_gettime(CLOCK_MONOTONIC, &end);
+        // 3. Execution & Timing
+        clock_gettime(CLOCK_MONOTONIC, &t_start);
+        
+        status = execute_dispatcher(input_buf);
+        
+        clock_gettime(CLOCK_MONOTONIC, &t_end);
 
-        elapsed_ms = (end.tv_sec - start.tv_sec) * 1000 + 
-                     (end.tv_nsec - start.tv_nsec) / 1000000;
+        // Compute elapsed time in milliseconds
+        duration_ms = (t_end.tv_sec - t_start.tv_sec) * MS_PER_SEC + 
+                      (t_end.tv_nsec - t_start.tv_nsec) / NS_PER_MS;
+
+        // 4. Update UI for next turn
+        show_prompt(status, duration_ms);
     }
+
     return EXIT_SUCCESS;
 }
