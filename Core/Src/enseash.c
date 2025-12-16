@@ -24,10 +24,31 @@ int execute_command(char *command){ // Q2 pdf page 56
     }
     else if(pid != 0 ){ // father code 
         wait(&status);
+        return status; // we send the info ot the main 
     }
     else{ // child code 
         execlp(command, command, (char *)NULL); //arguments :(filename, arg0, ...) we dont need the path 
-        write(STDERR_FILENO,"Command not found , try sudo install \n",18);
+        char *errormsg= "Command not found\n";
+        write(STDERR_FILENO,errormsg,strlen(errormsg));
         exit(EXIT_FAILURE);
+    }
+}
+void write_integer(int n){
+    char buffer[20];
+    int i =0;
+    if(n==0){
+        write(STDOUT_FILENO,"0",1);
+        return;
+    }
+    //we() extract one by one 
+    while(n > 0){
+        buffer[i] = (n % 10) + '0'; // char ASCII
+        n/=10;
+        i++;
+    }
+    //buffer normal
+    while(i > 0){
+        i--;
+        write(STDOUT_FILENO, &buffer[i], 1);
     }
 }

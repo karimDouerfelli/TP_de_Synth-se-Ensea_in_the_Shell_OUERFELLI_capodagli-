@@ -6,6 +6,8 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/wait.h>  //indisponsible pour les macros WEXITSTATUS
+
 
 #define BUF_SIZE 1024  //standard for a command input buffer.
 #define WELCOME_MSG "Bienvenue dans le Shell ENSEA.\nPour quitter, tapez 'exit'.\n"
